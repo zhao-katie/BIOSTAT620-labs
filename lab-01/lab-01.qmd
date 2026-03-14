@@ -1,0 +1,104 @@
+---
+title: "Lab1"
+author: Katie Zhao
+format: html
+editor: visual
+embed-resources: true
+theme: cyborg
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+library(datasauRus)
+```
+
+## QUESTION 1
+
+**Based on the help file, how many rows and how many columns does the datasaurus_dozen file have? What are the variables included in the data frame? Add your responses to your lab report, with relevant code in the associated R code chunk, and free-form text outside of the code chunk.**
+
+```{r}
+?datasaurus_dozen
+str(datasaurus_dozen)
+colnames(datasaurus_dozen)
+```
+
+Rows: 1846 Columns: 3 Variables: "dataset", "x", "y"
+
+```{r}
+table(datasaurus_dozen$dataset)
+```
+
+## QUESTION 2
+
+**Plot y vs. x for the dino dataset. Then, calculate the correlation coefficient between x and y for just this dataset.**
+
+```{r}
+
+dino_data <- datasaurus_dozen[datasaurus_dozen$dataset == 'dino', ]
+plot(dino_data$x, dino_data$y)
+cor(dino_data$x, dino_data$y)
+
+```
+
+## QUESTION 3
+
+**Now try it on your own! Plot y vs. x for the star dataset, another one of the datasaurus_dozen. You can (and should) re-use code we introduced above, just replace the dataset name with the desired dataset. Then, calculate the correlation coefficient between x and y for this dataset. How does this value compare to the r of dino?**
+
+```{r}
+
+star_data <- datasaurus_dozen[datasaurus_dozen$dataset == "star", ]
+plot(star_data$x, star_data$y)
+cor(star_data$x, star_data$y)
+
+```
+
+The correlation coefficient of the "star" dataset between x&y is -0.0629611, which is slightly lower in absolute magnitude than the correlation coefficient of the "dino" dataset -0.06447185.
+
+## QUESTION 4
+
+**Plot y vs. x for the circle dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. Then, calculate the correlation coefficient between x and y for this dataset. How does this value compare to the r of dino?**
+
+```{r}
+
+circle_data <- datasaurus_dozen[datasaurus_dozen$dataset == "circle", ]
+plot(circle_data$x, circle_data$y)
+cor(circle_data$x, circle_data$y)
+
+```
+
+The correlation coefficient of the "circle" dataset between x&y is -0.06834336, which is slightly higher in absolute magnitude than the correlation coefficient of the "dino" dataset -0.06447185.
+
+## QUESTION 5:
+
+**Now let's plot all 13 datasets at once.**
+
+```{r, fig.width = 12, fig.height = 12}
+
+layout(matrix(1:16, nrow=4, ncol=4))
+par(mar = c(2,2,2,2))
+
+for(name in unique(datasaurus_dozen$dataset)){
+  subset <- datasaurus_dozen[datasaurus_dozen$dataset == name, ]
+  plot(subset$x, subset$y, main = name)
+}
+
+layout(1)
+par(mar = c(5,4,4,2) + 0.1)
+
+```
+
+## QUESTION 6
+
+**Finally, we want to calculate the correlation between the `x` and `y` variables for all 13 datasets.**
+
+```{r}
+
+sapply(unique(datasaurus_dozen$dataset), function(name){
+    subset <- datasaurus_dozen[datasaurus_dozen$dataset == name, ]
+    return(cor(subset$x, subset$y))
+})
+
+```
